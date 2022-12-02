@@ -28,10 +28,12 @@
 #include <filesystem>
 #include <vector>
 #include<functional>
-
+#include <stdio.h>
+#include <fstream>
 class MapReduce {
 public:
     void run(const std::filesystem::path& input, const std::filesystem::path& output) {
+
         auto blocks = split_file(input, mappers_count);
 
         // Создаём mappers_count потоков
@@ -72,8 +74,33 @@ private:
     struct Block {
         size_t from;
         size_t to;
-    }
+    };
+
     std::vector<Block> split_file(const std::filesystem::path& file, int blocks_count) {
+        
+        std::vector<Block> function_result;
+        auto byte_sizes = std::filesystem::file_size(file);
+        size_t num_pages = byte_sizes/blocks_count;
+
+        int counter = 0;
+        for(size_t i = num_pages;i<byte_sizes;i+=num_pages){
+            Block block;
+            block.from = counter;
+            block.to = find_EOL(file,i);
+            counter = block.to;
+            function_result.push_back(block);
+            
+        } 
+
+
+
+
+
+
+
+
+
+        return function_result;
         /**
          * Эта функция не читает весь файл.
          * 
@@ -84,9 +111,41 @@ private:
          */
     }
 
+    int find_EOL(const std::filesystem::path& file, size_t counter){
+
+        std::ifstream myfile(file);
+        if(myfile.is_open()){
+            char symbol;
+            int i_left = counter;
+            int i_right = counter;
+            myfile.seekg(counter,std::ios::beg);
+            myfile >> symbol;
+
+           bool flag_r_l = true;
+           while(symbol != '\n'){
+                if(flag_r_l){
+                    myfile.seekg(++i_right,std::ios::beg);
+                    myfile >> symbol;
+                    flag_r_l = false;
+                }
+                else{
+                    myfile.seekg(--i_left,std::ios::beg);
+                    myfile >> symbol;
+                    flag_r_l = true;
+                }
+           }
+           if(flag_r_l){
+            return i_left;
+           }
+           else{
+            return i_right;
+           }
+        }
+    }
+
     int mappers_count;
     int reducers_count;
 
-    std::function</*type*/> mapper;
-    std::function</*type*/> reducer;
-}
+   // std::function</*type*/> mapper;
+   // std::function</*type*/> reducer;
+};

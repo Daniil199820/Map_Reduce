@@ -1,5 +1,5 @@
 #include <filesystem>
-
+#include "Map_reduce.h"
 /**
  * В этом файле находится клиентский код, который использует наш MapReduce фреймворк.
  * Этот код знает о том, какую задачу мы решаем.
@@ -16,13 +16,14 @@
  * Вы можете поступать по-своему (не как я описываю), задание творческое!
  * Можете делать так, как написано, если считаете, что это хорошо.
  */
-int main() {
+int main(int argc, char* argv[]) {
+    
     std::filesystem::path input("emails.txt");
     std::filesystem::path output("./out/");
     int mappers_count = 3;
     int reducers_count = 2;
 
-    MapReduce mr(mappers_count, reducers_count);
+  /*  MapReduce mr(mappers_count, reducers_count);
 
     цикл по длине префикса {
         mr.set_mapper([](){
@@ -44,6 +45,6 @@ int main() {
         });
         mr.run(input, output);
     }
-
+ */
     return 0;
 }
