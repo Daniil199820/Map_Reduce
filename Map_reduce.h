@@ -36,6 +36,10 @@ public:
 
         auto blocks = split_file(input, mappers_count);
 
+        for(int i = 0; i<mappers_count;++i){
+            
+        } 
+
         // Создаём mappers_count потоков
         // В каждом потоке читаем свой блок данных
         // Применяем к строкам данных функцию mapper
@@ -72,6 +76,7 @@ public:
     }
 private:
     struct Block {
+
         size_t from;
         size_t to;
     };
@@ -82,23 +87,15 @@ private:
         auto byte_sizes = std::filesystem::file_size(file);
         size_t num_pages = byte_sizes/blocks_count;
 
-        int counter = 0;
-        for(size_t i = num_pages;i<byte_sizes;i+=num_pages){
+        size_t counter = 0;
+        while (counter <byte_sizes){
             Block block;
             block.from = counter;
-            block.to = find_EOL(file,i);
-            counter = block.to;
-            function_result.push_back(block);
-            
+            counter += num_pages;
+            block.to = find_EOL(file,counter);
+            ++counter;
+            function_result.emplace_back(block);
         } 
-
-
-
-
-
-
-
-
 
         return function_result;
         /**
@@ -111,7 +108,7 @@ private:
          */
     }
 
-    int find_EOL(const std::filesystem::path& file, size_t counter){
+    int find_EOL(const std::filesystem::path& file, size_t& counter){
 
         std::ifstream myfile(file);
         if(myfile.is_open()){
@@ -135,9 +132,11 @@ private:
                 }
            }
            if(flag_r_l){
+            counter = i_left;
             return i_left;
            }
            else{
+            counter = i_right;
             return i_right;
            }
         }

@@ -236,8 +236,18 @@ CMakeFiles/map_reducer.dir/main.cpp.o: ../main.cpp \
   /usr/include/c++/11/bits/algorithmfwd.h \
   /usr/include/c++/11/bits/stl_heap.h \
   /usr/include/c++/11/bits/stl_tempbuf.h \
-  /usr/include/c++/11/bits/uniform_int_dist.h
+  /usr/include/c++/11/bits/uniform_int_dist.h \
+  /usr/include/c++/11/fstream \
+  /usr/include/x86_64-linux-gnu/c++/11/bits/basic_file.h \
+  /usr/include/x86_64-linux-gnu/c++/11/bits/c++io.h \
+  /usr/include/c++/11/bits/fstream.tcc
 
+
+/usr/include/c++/11/bits/fstream.tcc:
+
+/usr/include/x86_64-linux-gnu/c++/11/bits/c++io.h:
+
+/usr/include/x86_64-linux-gnu/c++/11/bits/basic_file.h:
 
 /usr/include/c++/11/bits/stl_heap.h:
 
@@ -470,6 +480,8 @@ CMakeFiles/map_reducer.dir/main.cpp.o: ../main.cpp \
 /usr/include/x86_64-linux-gnu/bits/floatn-common.h:
 
 /usr/include/c++/11/filesystem:
+
+/usr/include/c++/11/fstream:
 
 /usr/include/c++/11/ext/alloc_traits.h:
 

@@ -15,13 +15,17 @@
  * Здесь описано то, как я примерно решал бы задачу, это не руководство к действию, а просто пояснение к основному тексту задания.
  * Вы можете поступать по-своему (не как я описываю), задание творческое!
  * Можете делать так, как написано, если считаете, что это хорошо.
+ * 
  */
+
+
 int main(int argc, char* argv[]) {
+
     
-    std::filesystem::path input("emails.txt");
-    std::filesystem::path output("./out/");
-    int mappers_count = 3;
-    int reducers_count = 2;
+   // std::filesystem::path input("emails.txt");
+   // std::filesystem::path output("./out/");
+   // int mappers_count = 3;
+   // int reducers_count = 2;
 
   /*  MapReduce mr(mappers_count, reducers_count);
 
