@@ -27,17 +27,43 @@
 #include <iostream>
 #include <filesystem>
 #include <vector>
-#include<functional>
+#include <functional>
 #include <stdio.h>
 #include <fstream>
+#include <thread>
+
+std::string read_block(const std::filesystem::path& filename,size_t begin,size_t end){
+    std::cout<<begin<<"\n";
+    std::cout<<end<<"\n";
+    std::string str(end-begin,'\0');
+    std::ifstream file(filename);
+    file.seekg(begin,std::ios::beg);
+    for(int i = 0;i<end-begin;++i){
+        str[i] = file.get();
+        std::cout<<str[i];
+    }
+    return str;
+}
+
 class MapReduce {
 public:
-    void run(const std::filesystem::path& input, const std::filesystem::path& output) {
+    void run(const std::filesystem::path& input) {
+       auto blocks = split_file(input, mappers_count);
+        // set mapper
+         for(int j = 0; j<mappers_count;++j){
+            vec_threads.emplace_back([&,j](){
+                std::stringstream fl_name;
+                fl_name << "file_"<<std::this_thread::get_id();
+                std::ofstream f_out(fl_name.str());
+                f_out << read_block(input,blocks[j].from,blocks[j].to);
+                f_out.close();
+            });
+        }
 
-        auto blocks = split_file(input, mappers_count);
-
-        for(int i = 0; i<mappers_count;++i){
-            
+        for(auto& cur_thread:vec_threads){
+            if(cur_thread.joinable()){
+                cur_thread.join();
+            }
         } 
 
         // Создаём mappers_count потоков
@@ -81,18 +107,23 @@ private:
         size_t to;
     };
 
+    std::vector<std::thread> vec_threads;
+
     std::vector<Block> split_file(const std::filesystem::path& file, int blocks_count) {
         
         std::vector<Block> function_result;
-        auto byte_sizes = std::filesystem::file_size(file);
-        size_t num_pages = byte_sizes/blocks_count;
+        int byte_size = std::filesystem::file_size(file);
 
+        int num_pages = byte_size/blocks_count;
+        //std::cout<< byte_size<<"\n";
         size_t counter = 0;
-        while (counter <byte_sizes){
+        while (counter <byte_size){
             Block block;
             block.from = counter;
             counter += num_pages;
-            block.to = find_EOL(file,counter);
+            if(counter>byte_size)counter = byte_size-1;
+            //std::cout<<counter<<"\n";
+            block.to = find_EOL(file,counter,byte_size);
             ++counter;
             function_result.emplace_back(block);
         } 
@@ -108,43 +139,54 @@ private:
          */
     }
 
-    int find_EOL(const std::filesystem::path& file, size_t& counter){
+    int find_EOL(const std::filesystem::path& file, size_t& counter,size_t max_counter){
 
-        std::ifstream myfile(file);
+        std::ifstream myfile;
+        myfile.open(file);
         if(myfile.is_open()){
             char symbol;
             int i_left = counter;
             int i_right = counter;
             myfile.seekg(counter,std::ios::beg);
-            myfile >> symbol;
-
+            symbol = myfile.get();
+          //  std::cout<<symbol<<"\n";
            bool flag_r_l = true;
-           while(symbol != '\n'){
+           while(symbol != '\n' && i_left>0 && i_right<max_counter){
                 if(flag_r_l){
                     myfile.seekg(++i_right,std::ios::beg);
-                    myfile >> symbol;
+                    symbol = myfile.get();
+                    //std::cout << symbol;
                     flag_r_l = false;
+               //     std::cout<<"false\n";
                 }
                 else{
                     myfile.seekg(--i_left,std::ios::beg);
-                    myfile >> symbol;
+                    symbol = myfile.get();
+                    //std::cout << symbol;
                     flag_r_l = true;
+             //       std::cout<<"true\n";
                 }
            }
            if(flag_r_l){
             counter = i_left;
+            //std::cout<<counter;
+            //std::cout<<symbol<<"\n";
             return i_left;
            }
            else{
             counter = i_right;
+            //std::cout<<counter;
+            //std::cout<<symbol<<"\n";
             return i_right;
            }
         }
+        myfile.close();
+        return 0;
     }
 
-    int mappers_count;
-    int reducers_count;
-
-   // std::function</*type*/> mapper;
+    int mappers_count = 1 ;
+    int reducers_count = 3;
+    //std::ifstream f_in;
+    //std::function<void()> mapper;
    // std::function</*type*/> reducer;
 };

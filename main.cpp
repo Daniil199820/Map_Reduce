@@ -19,9 +19,26 @@
  */
 
 
+
 int main(int argc, char* argv[]) {
 
-    
+
+    MapReduce mp;
+    std::filesystem::path input("test.txt");
+    std::filesystem::path output("./out/");
+    mp.run(input);
+    //std::vector<std::thread> vect;
+
+    //auto fd = [](){std::cout<<"print\n";};
+
+    //std::function<void()> f = std::move(fd);
+
+    //vect.emplace_back(f);
+
+    //for(auto& cur_thread:vect){
+    //    cur_thread.join();
+    //}
+
    // std::filesystem::path input("emails.txt");
    // std::filesystem::path output("./out/");
    // int mappers_count = 3;
