@@ -189,4 +189,10 @@ CMakeFiles/map_reducer.dir/main.cpp.o: \
  /usr/include/x86_64-linux-gnu/c++/11/bits/c++io.h \
  /usr/include/c++/11/bits/fstream.tcc /usr/include/c++/11/thread \
  /usr/include/c++/11/bits/std_thread.h \
- /usr/include/c++/11/bits/this_thread_sleep.h
+ /usr/include/c++/11/bits/this_thread_sleep.h /usr/include/c++/11/future \
+ /usr/include/c++/11/mutex /usr/include/c++/11/bits/std_mutex.h \
+ /usr/include/c++/11/bits/unique_lock.h \
+ /usr/include/c++/11/condition_variable /usr/include/c++/11/atomic \
+ /usr/include/c++/11/bits/atomic_base.h \
+ /usr/include/c++/11/bits/atomic_lockfree_defines.h \
+ /usr/include/c++/11/bits/atomic_futex.h

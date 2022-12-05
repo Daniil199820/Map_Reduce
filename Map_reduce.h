@@ -31,6 +31,8 @@
 #include <stdio.h>
 #include <fstream>
 #include <thread>
+#include <future>
+
 
 std::string read_block(const std::filesystem::path& filename,size_t begin,size_t end){
     std::cout<<begin<<"\n";
@@ -56,6 +58,7 @@ public:
                 fl_name << "file_"<<std::this_thread::get_id();
                 std::ofstream f_out(fl_name.str());
                 f_out << read_block(input,blocks[j].from,blocks[j].to);
+                
                 f_out.close();
             });
         }
@@ -99,6 +102,11 @@ public:
         // Применяем к строкам функцию reducer
         // Результат сохраняется в файловую систему 
         //             (во многих задачах выход редьюсера - большие данные, хотя в нашей задаче можно написать функцию reduce так, чтобы выход не был большим)
+    }
+    template<typename Func, typename ...Args>
+    void set_mapper(const Func& func, Args&&... args){
+
+        mapper = std::async(std::launch::deferred, func, args...);
     }
 private:
     struct Block {
@@ -187,6 +195,8 @@ private:
     int mappers_count = 1 ;
     int reducers_count = 3;
     //std::ifstream f_in;
+   // template<typename ...Args>
     //std::function<void()> mapper;
+   std::future<void> mapper;
    // std::function</*type*/> reducer;
 };
