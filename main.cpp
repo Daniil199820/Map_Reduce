@@ -18,6 +18,9 @@
  * 
  */
 
+void print_num(int& value){
+    std::cout<<value<<"\n";
+}
 
 
 int main(int argc, char* argv[]) {
@@ -26,6 +29,7 @@ int main(int argc, char* argv[]) {
     MapReduce mp;
     std::filesystem::path input("test.txt");
     std::filesystem::path output("./out/");
+   // mp.set_mapper(std::bind(print_num,145));
     mp.run(input);
     //std::vector<std::thread> vect;
 

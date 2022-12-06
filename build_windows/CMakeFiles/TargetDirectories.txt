@@ -1,0 +1,3 @@
+D:/Map_Reduce/build_windows/CMakeFiles/map_reducer.dir
+D:/Map_Reduce/build_windows/CMakeFiles/ALL_BUILD.dir
+D:/Map_Reduce/build_windows/CMakeFiles/ZERO_CHECK.dir
